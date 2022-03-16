@@ -1,0 +1,39 @@
+<div class="u-bgWhite Flex-main">
+   <section class="Section Container u-textCenter u-noPadding" ng-controller="MagCalCtrl" id="MagCalApp">
+      <div id="canvasWrapper" class="u-before1of12 u-size10of12 u-textCenter" ng-hide="mag_cal.state == 'idle' || mag_cal.state == 'starting' || mag_cal.state == 'succeeded' || mag_cal.state == 'failed'">
+         <canvas id="magCanvas" style="display:block;margin:0 auto;max-height:1000000px;"></canvas>
+         <div id="canvasFooter" class="u-paddingBottom">
+            <p class="u-noMargin">Orientation: {{mag_cal.message}}</p>
+            <button type="button" class="Button Button--primary" ng-click="CancelMagCal()"><span class="octicon octicon-primitive-square u-alignMiddle"></span> Cancel</button><br/><br/>
+         </div>
+      </div>
+      <div ng-hide="mag_cal.state != 'idle'">
+         <p>Press Start to begin the magnetometer calibration process</p><br/>
+         <button type="button" class="Button Button--primary" ng-click="StartMagCal()"><span class="octicon octicon-triangle-right u-alignMiddle"></span> Start</button>
+      </div>
+      <div ng-hide="mag_cal.state != 'starting'">
+         <h1>Starting Magnetometer Calibration</h1>
+         <h2>Please pick up the camera</h2>
+         <br/>
+         <div us-spinner="{radius: 5, width: 5, length: 10, position: 'relative'}"></div>
+      </div>
+      <div id="completed" ng-hide="mag_cal.state != 'succeeded'">
+         <div id="compassHeader" style="overflow:hidden;">
+            <h1><span class="u-colorGreen">&#10003;</span> Calibration Successful!</h1>
+            <p>Please verify the DLS's heading (shown below) with a compass</p>
+         </div>
+         <canvas id="compassCanvas" style="display:block;margin:0 auto;max-height:1000000px;"></canvas>
+         <div id="compassFooter" style="overflow:hidden;">
+            <h1>{{ yaw_deg | number: 1 }}&deg;</h1><br/>
+            <button type="button" class="Button Button--primary" onclick="javascript:window.location.href='/#/config'">Return to Configuration Page</button><br/><br/>
+            <button type="button" class="Button Button--primary" ng-click="StartMagCal()"><span class="headingC u-colorWhite">&#10226;</span> Start Again</button><br/><br/>
+         </div>
+      </div>
+      <div ng-hide="mag_cal.state != 'failed'">
+         <h1><span class="u-colorRed">&#9940;</span> FAILED <span class="u-colorRed">&#9940;</span></h1>
+         <p>The magnetometer calibration has failed: <span class="u-colorRed">{{mag_cal.message}}</span></p>
+         <p>Please try the calibration again.</p><br/>
+         <button type="button" class="Button Button--primary" ng-click="StartMagCal()"><span class="headingC u-colorWhite">&#10226;</span> Try Again</button>
+      </div>
+   </section>
+</div>

@@ -1,0 +1,142 @@
+<div class="u-bgWhite Flex-main">
+  <section class="Section Container">
+    <div class="Grid Status">
+      <div class="Grid-cell u-size4of4 Status-bar Status-bar--red" ng-class="{'u-hidden':warnings.length == 0}">
+         <div class="u-textCenter" ng-repeat="(warn_idx,warning) in warnings">{{warning}}</div>
+      </div>
+    </div>
+
+      <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Storage
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-class="{'Status-bar--green': !status.sd_warn, 'Status-bar--yellow': status.sd_warn, 'u-hidden': ((status.sd_status == 'NotPresent') || (status.sd_gb_total == 0))}">
+        <span ng-show="status.sd_warn">&#9888;</span><span ng-show="!status.sd_warn">&#10003;</span> {{status.sd_gb_free | number : 1}} of {{status.sd_gb_total | number : 1}} GB Free ({{status.sd_type}})
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar--red" ng-class="{'u-hidden': !((status.sd_status == 'NotPresent') || (status.sd_gb_total == 0))}">&#9940; No storage media
+      </div>
+    </div>
+
+    <div ng-repeat="(net_addr, sd_card) in network" class="Grid Status" ng-show="sd_card.device_type == 'Camera' && sd_card.mode != 'main' && sd_card.serial != serial">
+      <div class="Grid-cell u-size1of4 Status-label">
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-class="{'Status-bar--green': !sd_card.sd_warn, 'Status-bar--yellow': sd_card.sd_warn, 'u-hidden': ((sd_card.sd_status == 'NotPresent') || (sd_card.sd_gb_total == 0))}">
+        <span ng-show="sd_card.sd_warn">&#9888;</span><span ng-show="!sd_card.sd_warn">&#10003;</span> {{sd_card.sd_gb_free | number : 1}} of {{sd_card.sd_gb_total | number : 1}} GB Free ({{sd_card.sd_type}})
+        <span ng-show="net_addr != 0" style="float:right">({{network[net_addr].serial}})</span>
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar--red" ng-class="{'u-hidden': !((sd_card.sd_status == 'NotPresent') || (sd_card.sd_gb_total == 0))}">&#9940; No storage media
+        <span ng-show="net_addr != 0" style="float:right">({{network[net_addr].serial}})</span>
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        GPS Sats
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar" ng-class="{'Status-bar--green': !status.gps_warn, 'Status-bar--yellow': status.gps_warn, 'Status-bar--red': (status.gps_warn && (status.gps_used_sats == 0))}">
+        <span ng-show="status.gps_warn">&#9940;</span><span ng-show="!status.gps_warn">&#10003;</span>
+        <span ng-show="status.gps_type=='Ublox'">{{status.gps_used_sats}} Used / {{status.gps_vis_sats}} Visible</span>
+        <span ng-show="status.gps_type!='Ublox'">{{status.gps_type}}</span>
+      </div>
+    </div>
+
+    <div class="Grid Status">
+       <div class="Grid-cell u-size1of4 Status-label">
+          DLS Status
+       </div>
+       <div class="Grid-cell u-size3of4 Status-bar Status-bar--green" ng-show="status.dls_status == 'Ok'">
+          &#10003; Connected
+       </div>
+       <div class="Grid-cell u-size3of4 Status-bar Status-bar--yellow" ng-show="status.dls_status == 'Programming'">
+          &#9888; Bad firmware version: attempting to update
+       </div>
+       <div class="Grid-cell u-size3of4 Status-bar Status-bar--yellow" ng-show="status.dls_status == 'Initializing'">
+          &#9888; Initializing...
+       </div>
+       <div class="Grid-cell u-size3of4 Status-bar Status-bar--red" ng-show="status.dls_status == 'Error'">
+          &#9940; Light sensor error. Reflectance panel captures required.
+       </div>
+       <div class="Grid-cell u-size3of4 Status-bar Status-bar--red" ng-show="status.dls_status == 'NotPresent'">
+          &#9940; Not connected
+       </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Time
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar" ng-class="{'Status-bar--green': status.utc_time_valid, 'Status-bar--red': !status.utc_time_valid}">
+        <span ng-show="status.utc_time_valid">&#10003;</span><span ng-show="!status.utc_time_valid">&#9940;</span> {{status.utc_time | date : "yyyy-MM-dd HH:mm:ss UTC" : "UTC"}} <span ng-show="status.time_source=='PPS'">&#x24C5;</span>
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Location
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar">
+        {{status.gps_lat  | number : 5}}, {{status.gps_lon | number : 5}}
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Altitude
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar">
+        {{(status.alt_msl) | number : 1}}m MSL / {{(status.alt_agl) | number : 1}}m AGL
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Speed
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar">
+        {{status.vel_2d | number : 2}}m/s
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Heading
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar Status-bar">
+        {{((dls_attitude.yaw*180/3.14159265359)+360)%360  | number : 1}}&deg; (magnetic)
+      </div>
+    </div>
+
+    <div class="Grid Status">
+      <div class="Grid-cell u-size1of4 Status-label">
+        Capture Config
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-show="config.auto_cap_mode=='overlap'">
+        Target Alt: {{config.operating_alt}}m AGL<br/>
+        Along-Track: {{config.overlap_along_track}}%<br/>
+        Cross-Track: {{config.overlap_cross_track}}%
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-show="config.auto_cap_mode=='timer'">
+        Target Alt: {{config.operating_alt}}m AGL<br/>
+        Timer Period: {{config.timer_period}}s
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-show="config.auto_cap_mode=='ext'">
+        Trigger style: {{config.ext_trigger_mode}}<br/>
+        PWM Width: {{config.pwm_trigger_threshold}}ms
+      </div>
+      <div class="Grid-cell u-size3of4 Status-bar" ng-show="config.auto_cap_mode=='disabled'">
+        <em>Disabled</em>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="Section u-bgWhite Flex-footer">
+  <div class="Container">
+    <div class="Grid Graph">
+      <div ng-repeat="svinfo in status.sv_info | orderBy: ['-used_flag','-cno'] | limitTo: '12' | orderBy: 'svid'" class="Grid-cell u-size1of12 Graph-bar"
+          ng-class="{'Graph-bar--error': svinfo.cno<28, 'Graph-bar--warning': (svinfo.cno>=28 && svinfo.cno<35), 'Graph-bar--good': svinfo.cno>=35, 'Graph-bar--used': svinfo.used_flag==true}" style="height: {{svinfo.cno * 4}}px;">
+        <span class="u-alignTop">{{svinfo.cno}}</span>
+      </div>
+    </div>
+  </div>
+</section>

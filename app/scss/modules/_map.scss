@@ -1,0 +1,48 @@
+/* Map */
+
+.Map {
+  background-color: $black;
+}
+
+.Map-img {
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.Map-pixelated {
+
+    image-rendering: -moz-crisp-edges;
+
+    @media screen and (min-color-index:0) and(-webkit-min-device-pixel-ratio:0) { @media
+    {  
+        image-rendering: -webkit-optimize-contrast;
+    } }
+
+    @supports (-webkit-appearance:none) and (color:unset) { 
+        image-rendering: pixelated;
+    }
+
+}
+
+.Map-legend {
+  padding: $whitespace-sm;
+  display: inline-block;
+}
+
+.Map-excellent {
+  background-color: #2B57CF;
+}
+
+.Map-good {
+  background-color: #BEF434;
+}
+
+.Map-poor {
+  background-color: #FDAE35;
+}
+
+.Map-bad {
+  background-color: #D21404;
+}
+

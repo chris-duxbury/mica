@@ -1,0 +1,8 @@
+{
+   "state": "edge1",
+   "sample_counts": [0,1,2,3,4,5,6,7,8,9,10,11],
+   "required_counts": 5,
+   "level_vector": [0,0,1],
+   "mag_angle": 0.7,
+   "message": "test message"
+}

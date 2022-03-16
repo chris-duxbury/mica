@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>MicaSense Camera App</title>
+
+  <script src="lib/angular/angular.min.js"></script>
+
+  <!-- build:css css/combined.css -->
+  <link href="css/octicons.css" rel="stylesheet" type="text/css">
+  <link href="css/styles.css" rel="stylesheet" type="text/css">
+  <link href="css/fonts.css" rel="stylesheet" type="text/css">
+  <link href="css/flightcalculator.css" rel="stylesheet" type="text/css">
+  <!-- endbuild -->
+
+</head>
+<body class="Flex">
+  <nav class="GlobalNav">
+    <div class="Container u-noPadding">
+      <div class="Grid">
+        <div class="Grid-cell u-size1of4 u-textCenter">
+          <a href="#/status" class="GlobalNav-link GlobalNav-link--home"
+              ng-class="{active: activetab == '/status'}">
+            <span class="u-srOnly">Home</span>
+          </a>
+        </div>
+        <div class="Grid-cell u-size1of4 u-textCenter">
+          <a href="#/live_view" class="GlobalNav-link GlobalNav-link--camera"
+              ng-class="{active: activetab == '/live_view'}">
+            <span class="u-srOnly">Live view</span>
+          </a>
+        </div>
+        <div class="Grid-cell u-size1of4 u-textCenter">
+          <a href="#/map" class="GlobalNav-link GlobalNav-link--map"
+              ng-class="{active: activetab == '/map'}">
+            <span class="u-srOnly">Map</span>
+          </a>
+        </div>
+        <div class="Grid-cell u-size1of4 u-textCenter">
+          <a href="#/config" class="GlobalNav-link GlobalNav-link--settings"
+              ng-class="{active: activetab == '/config'}">
+            <span class="u-srOnly">Configuration</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BEGIN: Pre-Bootstrap Loading Screen. -->
+  <div ng-if="false" class="u-textCenter" style="height: 100%">
+      <p style="margin-top: 10%">Camera App powered by:</p>
+      <img src="img/micasense.png">
+      <noscript><p class="u-textBold">JavaScript is required to use this page</p></noscript>
+
+  </div>
+  <!-- END: Pre-Bootstrap Loading Screen. -->
+
+  <main class="Flex--full" ng-view="" ng-cloak></main>
+
+  <!-- build:js(./) js/combined.js -->
+  <script src="lib/angular/angular-animate.js"></script>
+  <script src="lib/angular/angular-route.js"></script>
+  <script src="lib/angular/angular-resource.js"></script>
+  <script src="lib/angular-spinner/angular-spinner.js"></script>
+  <script src="lib/angular-smooth-scroll/angular-smooth-scroll.js"></script>
+  <script src="js/jquery-2.1.1.js"></script>
+  <script src="js/spin.js"></script>
+  
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/directives.js"></script>
+  <script src="js/coverageCalculator-controller.js"></script>
+  <script src="js/flightCalculator-controller.js"></script>
+
+  <script src="js/coverageApp.js"></script>
+  <script src="js/coverage_calculator/bitmap.js"></script>
+  <script src="js/flight_calculator/basicDOM.js"></script>
+  <script src="js/flight_calculator/calculator.js"></script>
+
+
+  <!-- endbuild -->
+  <script type="text/javascript">
+  var loadingTime = 2000;
+  setTimeout(function() {angular.bootstrap(document, ['myApp']);}, loadingTime)
+  </script>
+
+</body>
+</html>

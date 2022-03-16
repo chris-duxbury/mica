@@ -1,0 +1,10 @@
+*~
+node_modules
+app/node_modules
+app/dist
+app/last_run_*
+app/.tmp
+backup_app
+dist
+factoryapp/last_run_*
+webui_*.tar.gz

@@ -1,0 +1,35 @@
+<div class="u-bgWhite Flex-main">
+   <section class="Section Container u-textCenter u-noPadding" ng-controller="FirmwareCtrl">
+      <div id="progress_bar" ng-show="upload_state == 'uploading'">
+         <div class="u-textCenter u-bgLight">
+            <div class="Status-bar--green" style="width: {{upload_progress}}%"><strong>{{upload_progress | number:0}}%</strong></div>
+         </div>
+      </div>
+      
+      <div ng-show="upload_state == 'pending'">
+         <h1>Finalizing update...</h1>
+      </div>
+      
+      <div ng-show="upload_state == 'succeeded'">
+         <h1><span class="u-colorGreen">&#10003;</span> Successfully Uploaded</h1>
+         <p>Please reboot the camera to complete the update</p>
+      </div>
+      
+      <div ng-show="upload_state == 'failed'">
+         <h1><span class="u-colorRed">&#9940;</span> Upload Failed <span class="u-colorRed">&#9940;</span></h1>
+      </div>
+
+      <form id="upload_form" action="/firmwarepost" method="POST" enctype="multipart/form-data" ng-show="(upload_state == 'selecting') || (upload_state == 'failed')" class="Grid-cell u-size1of2">
+         <p>Please select the firmware <code>.bin</code> file:</p>
+         <div ng-repeat="file in sd_files" class="u-textLeft">
+            <input type="radio" name="file_select" value="{{file.name}}" id="select_{{file.name}}" ng-model="selected_file" />
+            <label for="select_{{file.name}}">{{file.name}}</label>
+         </div>
+         <div class="u-textLeft">
+            <input type="radio" name="file_select" value="upload" id="_select_upload" />
+            <input name="upload_file" type="file" onfocus="document.getElementById('_select_upload').checked=true;" />
+         </div>
+         <input type="button" class="Button Button--primary u-textNoWrap" value="Upgrade Firmware" ng-click="SelectBinary()" />
+      </form>
+   </section>
+</div>

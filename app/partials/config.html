@@ -1,0 +1,568 @@
+<!-- Encapsulate the page in single div for Safari compatibility -->
+<div>
+   <!-- Block for basic config panel -->
+   <section class="Section u-bgLight u-noPadding" ng-controller="ConfigCtrl">
+      <form name="form" ng-submit="processForm()">
+         <div class="u-bgWhite">
+            <div class="Container">
+               <div class="Grid">
+                  <div class="Grid-cell u-textCenter u-padding">
+                     <button class="Button--fakeLink" type="button"
+                           ng-click="expandPanel()">
+                        <h1 class="Caret" ng-class="{'is-active':expand.basicConfig}">Basic Configuration</h1>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="Container Caret-content" id="basicConfig"
+               ng-class="{'is-expanded':expand.basicConfig, 'is-collapsed':!expand.basicConfig}">
+
+            <!-- Auto capture mode -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight">
+                  Auto-Capture Mode:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" ng-model="config_form['auto_cap_mode']" name="auto_cap_mode"
+                           id="auto_cap_mode" ng-class="{'Form--hasWarning' : form.auto_cap_mode.$dirty}">
+                        <option value="disabled">Disabled</option>
+                        <option value="timer">Timer</option>
+                        <option value="overlap">Overlap</option>
+                        <option value="ext">Ext. Trigger</option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- End of auto capture mode -->
+
+            <!-- Along-track overlap setting -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow" ng-if="config_form['auto_cap_mode'] == 'overlap'">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight">
+                  Along-Track Overlap:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" id="overlap_along_track" name="overlap_along_track"
+                           ng-model="config_form['overlap_along_track']"
+                           ng-class="{'Form--hasWarning' : form.overlap_along_track.$dirty}"
+                           ng-options="toInt(key) as value for (key,value) in overlap_options">
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- End of along-track overlap -->
+
+            <!-- Timer period setting -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow" ng-if="(config_form['auto_cap_mode'] == 'timer')">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight">
+                  Timer Period (sec):
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <input type="text" ng-model="config_form.timer_period"
+                        id="timer_period" min="0.25" name="timer_period" class="Input-control" smart-float ng-class="{'Form--hasWarning' : form.timer_period.$dirty}" />
+                  <span ng-if="form.timer_period.$error.float">
+                     This is not a valid number!</span>
+                  <span ng-if="form.timer_period.$error.range">
+                     This value is outside of the allowable range</span>
+               </div>
+            </div>
+            <!-- End of timer period -->
+            
+            <!-- Target alt setting -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter Input u-paddedRow" ng-if="(config_form['auto_cap_mode'] == 'overlap') || (config_form['auto_cap_mode'] == 'timer')">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight Input-content">
+                  Target Alt:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <input type="number" class="Input-control Input-control--narrow" ng-model="config_form['operating_alt']" name="operating_alt"
+                        id="operating_alt" ng-class="{'Form--hasWarning': form.operating_alt.$dirty}" required />
+                  <span class="Input-helper">meters ({{operating_alt_feet | number : 1}} feet)</span>
+               </div>
+            </div>
+            <!-- End of target alt -->
+
+            <!-- AutoCap threshold alt setting -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter Input u-paddedRow" ng-if="(config_form['auto_cap_mode'] == 'overlap') || (config_form['auto_cap_mode'] == 'timer')">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight Input-content">
+                  Target Alt Tolerance:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <input type="number" class="Input-control Input-control--narrow" ng-model="config_form['operating_alt_tolerance']" name="operating_alt_tolerance"
+                        id="operating_alt_tolerance" ng-class="{'Form--hasWarning': form.operating_alt_tolerance.$dirty}" required />
+                  <span class="Input-helper">meters ({{operating_alt_tolerance_feet | number : 1}} feet)</span>
+               </div>
+            </div>
+            <!-- End of AutoCap threshold alt -->
+
+            <!-- Ext trigger mode -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow" ng-if="config_form['auto_cap_mode'] == 'ext'">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight">
+                  Ext Trigger Mode:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" ng-model="config_form['ext_trigger_mode']"
+                           id="ext_trigger_mode" name="ext_trigger_mode" ng-class="{'Form--hasWarning' : form.ext_trigger_mode.$dirty}">
+                        <option value="rising">Rising Edge</option>
+                        <option value="falling">Falling Edge</option>
+                        <option value="shortpwm">Short PWM</option>
+                        <option value="longpwm">Long PWM</option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- End of ext trigger mode -->
+
+            <!-- PWM thresshold -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter Input u-paddedRow" ng-if="(config_form['auto_cap_mode'] == 'ext') && ((config_form['ext_trigger_mode'] == 'longpwm') || (config_form['ext_trigger_mode'] == 'shortpwm'))">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight Input-content">
+                  PWM Threshold (ms):
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <input type="text" class="Input-control" ng-model="config_form['pwm_trigger_threshold']" ng-class="{'Form--hasWarning' : form.pwm_trigger_threshold.$dirty}"
+                        id="pwm_trigger_threshold" name="pwm_trigger_threshold" min=1 max=2 smart-float required />
+                  <span ng-show="form.pwm_trigger_threshold.$error.range">The value must be between 1.0 and 2.0 ms</span>
+                  <span ng-show="form.pwm_trigger_threshold.$error.float">Not a valid numeric input</span>
+               </div>
+            </div>
+            <!-- End of pmw thresshold -->
+
+            <!-- Manual exposure -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-md-size1of3 u-sm-size1of2 u-textRight">
+                  Manual Exposure:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <label class="Option">
+                     <input type="checkbox" class="Option-checkbox" ng-model="config_form['enable_man_exposure']"
+                           id="enable_man_exposure" name="enable_man_exposure" />
+                     <span class="Option-content" ng-class="{'Form--hasWarning' : form.enable_man_exposure.$dirty}">Enable</span>
+                  </label>
+               </div>
+            </div>
+            <!-- End of manual exposure -->
+
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-sm-size1of3 u-md-size1of4 u-sm-before2of3 -u-md-before3of4 u-textRight">
+                  <button type="submit" class="Button Button--primary">Save</button>
+               </div>
+            </div>
+
+            <div class="Grid Grid--error Grid--alignMiddle" role="alert" ng-show="form_error">
+               <div class="Grid-cell u-sizeFull u-textCenter">
+                  <strong>{{form_error}}</strong>
+               </div>
+            </div>
+
+            <br />
+
+            <!-- Start stop timer button -->
+            <div class="Grid Grid--alignMiddle Grid--withGutter" ng-if="config_form['auto_cap_mode'] == 'timer'">
+               <div class="Grid-cell u-md-size1of4 u-md-before1of12 u-lg-before1of6 u-sm-sizeFull">
+                  Timer Autocapture:
+               </div>
+               <div class="Grid-cell u-md-size1of4 u-md-before1of12 u-lg-before1of6 u-sm-sizeFill">
+                  &nbsp;{{auto_cap_status_msg()}}
+               </div>
+            </div>
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow" ng-if="config_form['auto_cap_mode'] == 'timer'">
+               <div class="Grid-cell u-md-size1of6 u-sm-size1of2 u-md-before1of12 u-lg-before1of6" ng-hide="status.auto_cap_active">
+                  <button type="button" class="Button Button--primary" id="auto_cap_on" name="auto_cap_on"
+                        ng-click="start_autocap()" ng-disabled="status.auto_cap_active == true"><span class="octicon octicon-triangle-right u-alignMiddle"></span> Start</button>
+               </div>
+               <div class="Grid-cell u-md-size1of6 u-sm-size1of2 u-md-before1of12 u-lg-before1of6 ng-hide" ng-hide="!status.auto_cap_active">
+                  <button type="button" class="Button Button--primary" id="auto_cap_off" name="auto_cap_off"
+                        ng-click="stop_autocap()" ng-disabled="status.auto_cap_active == false"><span class="octicon octicon-primitive-square u-alignMiddle"></span> Stop</button>
+               </div>
+            </div>
+            <!-- End start stop timer button -->
+         </div>
+      </form>
+   </section>
+   <!-- End of basic configuration -->
+
+
+
+   <!-- Block for advanced configuration -->
+   <section class="Section u-bgLight u-noPadding" ng-controller="AdvancedCtrl">
+      <form name="adv_form" ng-submit="processAdvForm()" novalidate>
+         <div class="u-bgWhite">
+            <div class="Container">
+               <div class="Grid">
+                  <div class="Grid-cell u-textCenter u-padding">
+                     <button class="Button--fakeLink" type="button" ng-click="expandPanel()">
+                        <h1 class="Caret" ng-class="{'is-active': expand.advanceConfig}">Advanced Configuration</h1>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="Container Caret-content" id="advancedConfig"
+               ng-class="{'is-expanded':expand.advanceConfig, 'is-collapsed':!expand.advanceConfig}">
+            
+            <!-- Audio Enable -->
+            <h2>Audio Options</h2>
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+               Audio Enable:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" id="audio_enable" name="audio_enable"
+                           ng-model="adv_config_form['audio_enable']"
+                           ng-class="{'Form--hasWarning' : adv_form.audio_enable.$dirty}"
+                           ng-options="o.v as o.n for o in
+                                       [{n:'Enabled', v:true},
+                                        {n:'Disabled', v:false}]">
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- End Audio Enable -->
+
+            <!-- RAW files format -->
+            <h2>Format for RAW files</h2>
+
+            <div class="Grid Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  DNG:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <strong>Smaller files, not compatible with all software</strong>
+               </div>
+            </div>
+
+            <div class="Grid Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  TIFF:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <strong>Larger files, most compatible file format</strong>
+               </div>
+            </div>
+
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  RAW format:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" id="raw_format" name="raw_format" ng-model="adv_config_form['raw_format']"
+                           ng-class="{'Form--hasWarning' : adv_form.raw_format.$dirty}">
+                        <option value="DNG">DNG (12-bit)</option>
+                        <option value="TIFF">TIFF (16-bit)</option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- End of RAW files format -->
+            
+            <!-- External trigger out -->
+            <h2>Pin Configuration</h2>
+            
+            <p>Some pins on the camera can be reconfigured as various inputs or outputs. Each function can only be assigned to one pin.</p>
+            <p><strong>&#x26A0; WARNING: Damage to the camera may occur if another output pin, such as the PPS output 
+                       on a GPS receiver, is connected to a pin set to an Output mode.</strong></p>
+            
+            <table id="pinModeTable">
+               <colgroup>
+                  <col /><!-- pin names column -->
+                  <col ng-repeat="fn in pin_mux['functions']" ng-class="{'Form--hasError' : (1 < pin_mux_function_selection_count[{{fn['id']}}])}" />
+               </colgroup>
+               <tr>
+                  <th class="u-textCenter">Pin Name</th>
+                  <th ng-repeat="fn in pin_mux['functions']" class="u-textCenter"
+                      ng-class="{'u-colorTeal' : fn['name'].includes('Input'),
+                                 'u-colorGreen' : fn['name'].includes('Output')}">{{fn['name']}}</th>
+               </tr>
+               <tr ng-repeat="pin in pin_mux['pins'] track by $index" ng-form="wrapper_form_{{$index}}" ng-class="{'u-bgDark': $even}">
+                  <td class="u-textRight" ng-class="{'Form--hasWarning' : adv_form.wrapper_form_{{$index}}.$dirty}">{{pin.name}}</td>
+                  <td ng-repeat="fn in pin_mux['functions']" class="u-textCenter">
+                     <input type="radio" class="Option-radio" name="pin_mode_{{$parent.$index}}_{{fn['id']}}"
+                            ng-model="adv_config_form['pin_modes'][$parent.$index]"
+                            ng-value="{{fn['id']}}"
+                            ng-change="validatePinModes()"
+                            ng-show="pin.opts.includes({{fn['id']}})" />
+                  </td>
+               </tr>
+            </table>
+            <p class="u-colorRed" ng-show="pin_mux_function_selection_invalid">&#9940; Each function can only be assigned to one pin.</p>
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  {{ui_text.frame_sync_type}} of Frame Pulse Polarity:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" id="ext_trigger_out_pulse_high" name="ext_trigger_out_pulse_high"
+                           ng-model="adv_config_form['ext_trigger_out_pulse_high']"
+                           ng-class="{'Form--hasWarning' : adv_form.ext_trigger_out_pulse_high.$dirty}"
+                           ng-options="o.v as o.n for o in
+                                       [{n:'Pulse high, rest low', v:true},
+                                        {n:'Pulse low, rest high', v:false}]">
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  Streaming Allowed:
+               </div>
+               <div class="Grid-cell u-md-size2of3 u-sm-size1of2">
+                  <label class="Option">
+                     <input type="checkbox" class="Option-checkbox" ng-model="adv_config_form['streaming_allowed']"
+                           id="streaming_allowed" name="streaming_allowed" />
+                     <span class="Option-content" ng-class="{'Form--hasWarning' : form.streaming_allowed.$dirty}">Allowed</span>
+                  </label>
+               </div>
+            </div>
+            
+            
+            <!-- End of external trigger out -->
+
+
+            <!-- Storage Media Output -->
+            <h2>Enabled Output files</h2>
+
+            <p>Select type of file(s) to be saved to storage media for each band</p>
+
+            <div ng-form="output_selector" ng-class="{'Form--hasWarning': adv_form.output_selector.$dirty}">
+
+               <div class="Grid Grid--alignMiddle Grid--withGutter">
+                  <div class="Grid-cell u-size1of3 u-md-before3of12 u-md-size1of12 u-textCenter u-marginTop">
+                     <strong>Camera</strong>
+                  </div>
+                  <div class="Grid-cell u-size2of3 u-md-after1of3 u-md-size1of3 u-marginTop">
+                     <div class="Arrange Arrange--equal">
+                        <div class="Arrange-fit u-textCenter">
+                           <strong>Raw</strong>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div ng-repeat="camera in cameras" class="Grid Grid--alignMiddle Grid--withGutter">
+                  <div class="Grid-cell u-size1of3 u-md-before3of12 u-md-size1of12 u-textCenter">
+                     <strong>{{$index+1}}</strong>
+                  </div>
+                  <div class="Grid-cell u-size2of3 u-md-after1of3 u-md-size1of3 u-textCenter">
+                     <label class="Option Option--standalone">
+                        <input type="checkbox" class="Option-checkbox" name="cam_select_{{$index}}_raw"
+                              ng-model="camera.raw" ng-change="camSelectBits()" />
+                        <span class="Option-content"><span class="u-srOnly">Band {{$index+1}}, Raw</span></span>
+                     </label>
+                  </div>
+               </div>
+
+            </div>
+            <!-- End of output -->
+
+
+            <!-- Multi Camera -->
+            <h2>Multi-Camera Configuration</h2>
+
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  Network Mode:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <div class="Dropdown">
+                     <select class="Dropdown-select" id="network_mode" name="network_mode" ng-model="adv_config_form['network_mode']"
+                           ng-class="{'Form--hasWarning' : adv_form.network_mode.$dirty}">
+                        <option value="main">Main</option>
+                        <option value="auxiliary">Auxiliary</option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+
+            <p>Multi-camera setups must have exactly one main camera</p>
+            <p>The camera must be rebooted for a mode change to take effect</p>
+
+            <table id="networkTable">
+               <tr>
+                  <th>Type</th>
+                  <th>Mode</th>
+                  <th>Serial</th>
+                  <th>Software</th>
+                  <th>GPS</th>
+               </tr>
+               <tr ng-repeat="device in network" ng-class="{'u-bgGreen u-colorWhite':serial == device.serial, 'u-bgDark':$odd}">
+                  <td>{{device.device_type}}</td>
+                  <td>{{device.mode}}</td>
+                  <td>{{device.serial}}</td>
+                  <td>{{device.sw_version}}</td>
+                  <td>{{device.gps_source}}</td>
+               </tr>
+            </table>
+            <!-- End of multi camera -->
+
+
+            <!-- Ethernet Config -->
+            <h2>Ethernet Configuration</h2>
+
+            <p>Select a static IP address that is not already used on your network</p>
+            <p>The camera must be rebooted for an IP change to take effect</p>
+
+            <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+               <div class="Grid-cell u-size1of3 u-textRight">
+                  IP Address:
+               </div>
+               <div class="Grid-cell u-size2of3">
+                  <input type="text" ng-model="adv_config_form['ip_address']" ip-validation name="ip_address"
+                        id="ip_address" class="Input-control" ng-class="{'Form--hasWarning' : adv_form.ip_address.$dirty,
+                                                                         'Form--hasError' : adv_form.ip_address.$invalid}"/>
+                  <span class="u-colorRed" ng-show="adv_form.ip_address.$error.ip_address">
+                     &#9940; An IP address must be of the form 123.456.789.012</span>
+               </div>
+            </div>
+            <!-- End of ethernet config -->
+
+            <div class="Container">
+               <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+                  <div class="Grid-cell u-size2of3 u-before1of3">
+                     <button type="submit" class="Button Button--primary" ng-disabled="adv_form.$invalid"><span ng-show="adv_form.$invalid">&#9940;</span>Save</button>
+                     <p class="u-colorRed" ng-show="adv_form.$invalid"><strong>One or more invalid settings detected. Please correct them.</strong></p>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
+      </form>
+   </section>
+   <!-- End advanced configuration -->
+   
+   <!-- Block for Miscellaneous Camera Stuff -->
+   <section class="Section u-bgLight u-noPadding" ng-controller="MiscCameraCtrl">
+      <div class="u-bgWhite">
+         <div class="Container">
+            <div class="Grid">
+               <div class="Grid-cell u-textCenter u-padding">
+                  <button class="Button--fakeLink" type="button" ng-click="miscCamExpand = !miscCamExpand">
+                     <h1 class="Caret" ng-class="{'is-active': miscCamExpand}">Storage and Firmware</h1>
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="Container Caret-content" id="miscCameraUtils"
+            ng-class="{'is-expanded':miscCamExpand, 'is-collapsed':!miscCamExpand}">
+         <div class="Grid Grid--alignMiddle Grid--withGutter">
+            <div class="Grid-cell u-md-size4of4 u-md-before1of12 u-lg-before1of6 u-sm-sizeFull">
+               <a class="Button Button--primary u-marginTop u-marginBottom" href="/#/firmware">Update Firmware</a>
+            </div>
+         </div>
+         <div class="Grid Grid--alignMiddle Grid--withGutter">
+            <div class="Grid-cell u-md-size4of4 u-md-before1of12 u-lg-before1of6 u-sm-sizeFull">
+               <span class="Button Button--primary u-marginTop u-marginBottom" ng-click="ConfirmFormatStoragePrompt()">Reformat Storage</span>&nbsp;
+               <span><span class="u-colorGreen" ng-show="reformat_response_type == 'success'">&#10003; {{reformat_response}}</span>
+                     <span class="u-colorRed"  ng-show="reformat_response_type == 'failure'">&#9940; {{reformat_response}}</span>
+                     <span ng-show="reformat_response_type == 'inProgress'">&#8987; {{reformat_response}}</span>
+               </span>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- End Miscellaneous Camera stuff -->
+
+   <!-- Block for DLS stuff -->
+   <section class="Section u-bgLight u-noPadding" ng-controller="DlsCtrl">
+      <div class="u-bgWhite">
+         <div class="Container">
+            <div class="Grid">
+               <div class="Grid-cell u-textCenter u-padding">
+                  <button class="Button--fakeLink" type="button" ng-click="dlsInfoExpand = !dlsInfoExpand">
+                     <h1 class="Caret" ng-class="{'is-active': dlsInfoExpand}">DLS Configuration</h1>
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="Container Caret-content" id="calibrateMag"
+            ng-class="{'is-expanded':dlsInfoExpand, 'is-collapsed':!dlsInfoExpand}">
+         <div class="Grid Grid--alignMiddle Grid--withGutter">
+            <div class="Grid-cell u-md-size4of4 u-md-before1of12 u-lg-before1of6 u-sm-sizeFull">
+               <a class="Button Button--primary u-marginTop u-marginBottom" href="/#/magcal">Calibrate DLS Mag</a>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- End DLS stuff -->
+
+   <!-- Block for regulatory notice stuff -->
+   <section class="Section u-bgLight u-noPadding">
+      <script type="text/javascript" language="javascript">
+         <!--
+            var regulatoryInfoExpand = 0;
+          -->
+      </script>
+      <div class="u-bgWhite">
+         <div class="Container">
+            <div class="Grid">
+               <div class="Grid-cell u-textCenter u-padding">
+                  <button class="Button--fakeLink" type="button" ng-click="regulatoryInfoExpand = !regulatoryInfoExpand">
+                     <h3 class="Caret" ng-class="{'is-active': regulatoryInfoExpand}">Regulatory Notices</h3>
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="Container Caret-content" id="regulatoryInfo"
+            ng-class="{'is-expanded':regulatoryInfoExpand, 'is-collapsed':!regulatoryInfoExpand}">
+         <h3><img src="img/regulation_FCC.png" title="FCC Logo" alt="FCC Logo" style="vertical-align:middle;" />&emsp;FCC Certification</h3>
+         <p>This device complies with Part 15 of the FCC Rules. Operation is subject to the following two
+            conditions: (1) this device may not cause harmful interference, and (2) this device must accept any
+            interference received, including interference that may cause undesired operation. Any changes or
+            modifications not expressly approved by the party responsible for compliance could void the authority to
+            operate equipment.</p>
+         <h3><img src="img/regulation_CE.png" title="CE Logo" alt="CE Logo" style="vertical-align:middle;" />&emsp;CE Certification</h3>
+         <p>This device conforms to the following CE standards:</p>
+         <table>
+            <thead class="u-bgWhite">
+               <td><strong>Compliance Type</strong></td>
+               <td><strong>Directive</strong></td>
+               <td><strong>Standard(s)</strong></td>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>Restriction of Hazardous Substances (RoHS)</td>
+                  <td>2011/65/EU</td>
+                  <td>EN 50581:2012</td>
+               </tr>
+               <tr class="u-bgDark">
+                  <td rowspan="2" style="vertical-align:top;">Electromagnetic Compatibility (EMC)</td>
+                  <td rowspan="2" style="vertical-align:top;">2014/30/EU</td>
+                  <td>EN 55024:2010</td>
+               </tr>
+               <tr class="u-bgDark">
+                  <td>EN 55032:2012/AC:2013</td>
+               </tr>
+               <tr>
+                  <td rowspan="2" style="vertical-align:top;">Radio Equipment Directive (RED)</td>
+                  <td rowspan="2" style="vertical-align:top;">2014/53/EU</td>
+                  <td>EN 301 489-19 V2.1.0:2017</td>
+               </tr>
+               <tr>
+                  <td>EN 303 413 V1.1.1:201</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </section>
+   <!-- End regulatory notice stuff -->
+
+   <section class="Section u-bgLight u-noPadding" ng-controller="VersionCtrl">
+      <div class="u-bgWhite">&nbsp;</div>
+      <div class="Container">
+         <div class="Grid">
+            <p class="Grid-cell u-size3of3 u-textCenter">Software Version: {{sw_version}} | Camera Serial: {{serial}}</p>
+            <form><!--Keep the controller happy--></form>
+         </div>
+      </div>
+   </section>
+   <!--End encapsulation -->
+</div>
+

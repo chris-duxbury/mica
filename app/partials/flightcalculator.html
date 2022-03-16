@@ -1,0 +1,462 @@
+<section class="Section u-bgLight u-noPadding" ng-controller="FlightCalculatorCtrl"
+         style="padding-bottom: 15px !important" id="FlightCalculatorApp">
+  <div class="u-bgWhite">
+    <div class="Container">
+      <div class="Grid">
+        <div class="Grid-cell u-textCenter u-padding">
+          <button class="Button--fakeLink" type="button"
+                  ng-click="expandCalculator = !expandCalculator">
+            <h1 class="Caret" ng-class="{'is-active': expandCalculator}">Pre-Flight Estimator</h1>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="Container Caret-content" id="flightEstimator"
+        ng-class="{'is-expanded': expandCalculator, 'is-collapsed': !expandCalculator}">
+    <div class="Grid u-paddedRow">
+      <p class="Grid-cell u-sizeFull u-textCenter">
+        Estimate the result of a flight mission.
+      </p>
+    </div>
+
+    <!-- input panel -->
+    <div id="missionInput-Panel">
+      <div class="Container  u-bgDark">
+        <div class="Grid">
+          <div class="Grid-cell u-textCenter u-padding">
+            <!-- <button class="Button--fakeLink" type="button"> -->
+              <h2 class="u-noMargin">Mission Input</h2>
+            <!-- </button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="Container Section u-bgWhite">
+
+        <form name="inputform" novalidate>
+
+          <div class="Grid Grid--alignMiddle Grid--smallGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size5of12 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.agl'].$invalid,
+                              'Implicit-output': (inputMode === 'gsd'),
+                              'Flash-form': flash.agl }">
+              <label class="Grid-cell u-size4of12 u-textRight u-textBold u-alignBottom">
+                Altitude AGL:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.agl" ng-model="value.agl"
+                        min="0" step="any" required
+                        ng-change="updateImplicitOutput('agl', 'gsd')" />
+              </div>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" name="unit.agl" ng-model="unit.agl" required
+                          ng-change="unitChange('agl', 'gsd')">
+                    <option value="feet">ft</option>
+                    <option value="meter" selected="selected">m</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.agl'].$dirty && inputform['value.agl'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input a number > 0
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size7of12 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.gsd'].$invalid,
+                              'Implicit-output': (inputMode === 'agl'),
+                              'Flash-form': flash.gsd }">
+              <label class="Grid-cell u-size1of12 u-textRight u-textBold u-alignBottom">
+                GSD:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.gsd" ng-model="value.gsd" 
+                       min="0" step="any" required
+                       ng-change="updateImplicitOutput('gsd', 'agl')" />
+              </div>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" name="unit.gsd" ng-model="unit.gsd" required
+                          ng-change="unitChange('gsd', 'agl')">
+                    <option value="inch">inch/px</option>
+                    <option value="cm" selected="selected">cm/px</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignBottom">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" id="selectImager" name="value.imagerType" ng-model="value.imagerType" required
+                          ng-change="imagerChange('agl', 'gsd')">
+                    <!-- We list all possible options here so they get the correct names. Invalid options removed in the controller -->
+                    <option value="bandpass" selected="selected">Multispectral</option>
+                    <option value="panchromatic">Panchromatic</option>
+                    <option value="thermal">Thermal</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.gsd'].$dirty && inputform['value.gsd'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input a number > 0
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.flightSpeed'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Flight Speed:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.flightSpeed" ng-model="value.flightSpeed"
+                       min="0" step="any" required />
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignBottom">
+                <div class="Dropdown">
+                <select class="Dropdown-select" name="unit.flightSpeed" ng-model="unit.flightSpeed" required>
+                  <option value="mph">mph</option>
+                  <option value="meterSec" selected="selected">m/s</option>
+                  <option value="kph">kph</option>
+                  <option value="knot">knots</option>
+                </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.flightSpeed'].$dirty && inputform['value.flightSpeed'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input a number > 0
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.area'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Area of the Field:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.area" ng-model="value.area"
+                       min="0" step="any" required />
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignBottom">
+                <div class="Dropdown">
+                <select class="Dropdown-select" name="unit.area" ng-model="unit.area" required>
+                  <option value="acre" selected="selected">acre</option>
+                  <option value="hectare">ha</option>
+                </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.area'].$dirty && inputform['value.area'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input a number > 0
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.forwardOverlap'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Forward Overlap:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.forwardOverlap" ng-model="value.forwardOverlap"
+                       min="0" max="99" step="1" required />
+              </div>
+              <div class="Grid-cell u-size2of6 u-alignBottom">
+                <span> %</span>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.forwardOverlap'].$dirty && inputform['value.forwardOverlap'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input an integer between 0 and 99
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.crossOverlap'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Cross Overlap:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignBottom">
+                <input type="number" class="Input-control" name="value.crossOverlap" ng-model="value.crossOverlap"
+                       min="0" max="99" step="1" required />
+              </div>
+              <div class="Grid-cell u-size2of6 u-alignBottom">
+                <span> %</span>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.crossOverlap'].$dirty && inputform['value.crossOverlap'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please input an integer between 0 and 99
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.orientation'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Camera Orientation:
+              </label>
+              <div class="Grid-cell u-size7of12">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" name="value.orientation" ng-model="value.orientation" required>
+                    <option value="landscape" selected="selected">Landscape</option>
+                    <option value="portrait">Portrait</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.orientation'].$dirty && inputform['value.orientation'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please select an option
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.imgQuality'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Image Output:
+              </label>
+              <div class="Grid-cell u-size7of12">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" name="value.imgQuality" ng-model="value.imgQuality" required>
+                    <option value="DNG">DNG (12bit)</option>
+                    <option value="TIFF">TIFF (16bit)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.imgQuality'].$dirty && inputform['value.imgQuality'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please select an option
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': inputform['value.wing'].$invalid}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignBottom">
+                Aircraft Type:
+              </label>
+              <div class="Grid-cell u-size7of12">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" name="value.wing" ng-model="value.wing" required>
+                    <option value="fixed">Fixed Wing</option>
+                    <option value="vtol">Multi Copter</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="inputform['value.wing'].$dirty && inputform['value.wing'].$invalid">
+                <span class="octicon octicon-issue-opened"></span> Please select an option
+              </div>
+            </div>
+
+          </div>
+
+          <div class="Grid Grid--withGutter Grid--alignMiddle u-paddedRow" style="overflow: hidden">
+            <div class="Grid-cell u-md-size3of5 u-md-before2of5 u-sm-size2of3 u-sm-before1of3">
+              <button type="submit" class="Button Button--primary u-textNoWrap"
+                      ng-click="calculateMission()" ng-disabled="inputform.$invalid"
+                      id="submitForm">
+                Calculate
+              </button>
+            </div>
+          </div>
+        
+        </form>
+
+      </div>
+    </div>
+    <!-- end of mission input -->
+
+
+    <!-- output panel -->
+    <div id="missionOutput-Panel">
+      <div class="Container  u-bgDark">
+        <div class="Grid">
+          <div class="Grid-cell u-textCenter u-padding">
+            <!-- <button class="Button--fakeLink" type="button"> -->
+              <h2 class="u-noMargin">Estimated Mission Result</h2>
+            <!-- </button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="Container Section u-bgWhite" ng-class="{'Flash-form': flash.output}">
+
+        <!-- <form name="coverageForm"> -->
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-sm-size1of1 u-sm-paddedRow" style="text-align: center;">
+              <b>Note:</b> These values are calculated based on the {{value.imagerName}} imager, and may not be accurate for other imager types
+            </div>
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Footprint Width:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.footprintWidth | number:2}}
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignMiddle">
+                <div class="Dropdown">
+                <select class="Dropdown-select" ng-model="unit.footprintWidth"
+                        ng-change="unitChange('footprintWidth')">
+                  <option value="feet">ft</option>
+                  <option value="meter" selected="selected">m</option>
+                </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Footprint Height:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.footprintHeight | number:2}}
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignMiddle">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" ng-model="unit.footprintHeight"
+                          ng-change="unitChange('footprintHeight')">
+                    <option value="feet">ft</option>
+                    <option value="meter" selected="selected">m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Distance between Capture:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.distanceForward|number:2}}
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignMiddle">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" ng-model="unit.distanceForward"
+                          ng-change="unitChange('distanceForward')">
+                    <option value="feet">ft</option>
+                    <option value="meter" selected="selected">m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Distance between Track:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.distanceParallel|number:2}}
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignMiddle">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" ng-model="unit.distanceParallel"
+                          ng-change="unitChange('distanceParallel')">
+                    <option value="feet">ft</option>
+                    <option value="meter" selected="selected">m</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': error.timeCapture}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Time between Capture:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.timeCapture | number:2}}
+              </div>
+              <div class="Grid-cell u-size3of12 u-alignMiddle">
+                seconds
+              </div>
+
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="error.timeCapture">
+                <span class="octicon octicon-issue-opened"></span> The capture speed for this mission is unachievable
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Flight Time:
+              </label>
+              <div class="Grid-cell u-size7of12 u-alignMiddle">
+                {{value.timeTotal}}
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Number of Captures:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                  {{value.numCaptures | number:0}}
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Number of Images:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                  {{value.numImages | number:0}}
+              </div>
+            </div>
+          </div>
+
+          <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Area per Hour:
+              </label>
+              <div class="Grid-cell u-size3of12 u-alignMiddle u-textCenter">
+                {{value.areaPerHour | number:2}}
+              </div>
+              <div class="Grid-cell u-size4of12 u-alignMiddle">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" ng-model="unit.areaPerHour"
+                          ng-change="unitChange('areaPerHour')">
+                    <option value="acre" selected="selected">acre/hr</option>
+                    <option value="hectare">ha/hr</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="Grid--withGutter Grid-cell u-md-size1of2 u-sm-size1of1 u-sm-paddedRow"
+                  ng-class="{'Form-error': error.storageSize}">
+              <label class="Grid-cell u-size2of6 u-textRight u-textBold u-alignMiddle">
+                Storage Space Requirement:
+              </label>
+              <div class="Grid-cell u-size4of12 u-alignMiddle u-textCenter">
+                {{value.storageSize | number:2}}
+              </div>
+              <div class="Grid-cell u-size3of12 u-alignMiddle">
+                GB
+              </div>
+              <div class="Grid-cell u-size1of1 Error-message" ng-show="error.storageSize">
+                <span class="octicon octicon-issue-opened"></span> This mission might require more than one flight with {{status.sd_gb_free| number: 2}} GB remaining on storage media
+              </div>
+            </div>
+
+          </div>
+
+        <!-- </form> -->
+
+      </div>
+    </div>
+    <!-- end of mission input -->
+
+  </div>
+</section>

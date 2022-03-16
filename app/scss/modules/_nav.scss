@@ -1,0 +1,63 @@
+/*
+Global Nav
+*/
+
+.GlobalNav {
+  flex: 0 0 auto;
+  background-color: $navy-dark;
+  color: $navy;
+}
+
+.GlobalNav-link {
+  display: block;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  width: 100%;
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 30px auto;
+
+  @media (min-width: $breakpoint-md) {
+    padding-top: 3em;
+    padding-bottom: 3em;
+
+    background-size: 50px auto;
+  }
+
+  &:hover, &.active {
+    background-color: $white;
+  }
+}
+
+.GlobalNav-link--home {
+  background-image: url("/icons/homeactive.png");
+
+  &:hover, &.active {
+    background-image: url("/icons/homeinactive.png");
+  }
+}
+
+.GlobalNav-link--camera {
+  background-image: url("/icons/cameraactive.png");
+
+  &:hover, &.active {
+    background-image: url("/icons/camerainactive.png");
+  }
+}
+
+.GlobalNav-link--map {
+  background-image: url("/icons/mapactive.png");
+
+  &:hover, &.active {
+    background-image: url("/icons/mapinactive.png");
+  }
+}
+
+.GlobalNav-link--settings {
+  background-image: url("/icons/settingsactive.png");
+
+  &:hover, &.active {
+    background-image: url("/icons/settingsinactive.png");
+  }
+}

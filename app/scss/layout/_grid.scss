@@ -1,0 +1,151 @@
+/** Grid
+
+Adapted from https://github.com/suitcss/components-grid
+
+A .Grid should always contain a .Grid-cell child.
+Size the .Grid-cell with the _size.scss utilities.
+
+.Grid                 core component
+.Grid--alignCenter    center-align all child Grid-cell
+.Grid--alignRight     right-align all child Grid-cell
+.Grid--alignMiddle    middle-align all child Grid-cell
+.Grid--alignBottom    bottom-align all child Grid-cell
+.Grid--withGutter     adds a gutter between cells
+.Grid-cell            a child cell of Grid that wraps grid content
+.Grid-cell--center    center an individual Grid-cell
+
+e.g.
+<div class="Grid [Grid--alignCenter|Grid--alignRight|Grid--alignMiddle|Grid--alignBottom]">
+  <div class="Grid-cell u-size1of2"></div>
+  <div class="Grid-cell u-size1of2"></div>
+  <div class="Grid-cell u-size1of3"></div>
+  <div class="Grid-cell u-size1of3"></div>
+</div>
+*/
+
+.Container {
+  margin: 0 auto;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  max-width: $containerMaxWidth;
+  width: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+}
+
+.Grid {
+  display: block;
+  font-size: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+/**
+ * Modifier: center align all grid cells
+ */
+
+.Grid--alignCenter {
+  text-align: center;
+}
+
+/**
+ * Modifier: right align all grid cells
+ */
+
+.Grid--alignRight {
+  text-align: right;
+}
+
+/**
+ * Modifier: middle-align grid cells
+ */
+
+.Grid--alignMiddle > .Grid-cell {
+  vertical-align: middle;
+}
+
+/**
+ * Modifier: bottom-align grid cells
+ */
+
+.Grid--alignBottom > .Grid-cell {
+  vertical-align: bottom;
+}
+
+/**
+ * Modifier: background-color grid
+ */
+.Grid--error {
+  background: $red;
+  color: $gray-light;
+}
+
+.Grid--warning {
+  background: $yellow;
+}
+
+/**
+ * Modifier: gutters
+ *
+ * NOTE: this can trigger a horizontal scrollbar if the component is as wide as
+ * the viewport. Use padding on a container, or `overflow-x:hidden` to protect
+ * against it.
+ */
+
+.Grid--withGutter {
+  margin: 0 (-0.5 * $gridGutterSize);
+
+  @media (min-width: $breakpoint-md) {
+    margin: 0 (-0.5 * $gridGutterSize-md);
+  }
+}
+
+.Grid--withGutter > .Grid-cell {
+  padding: 0 (0.5 * $gridGutterSize);
+
+  @media (min-width: $breakpoint-md) {
+    padding: 0 (-0.5 * $gridGutterSize-md);
+  }
+}
+
+/* Grid cell
+   ========================================================================== */
+
+/**
+ * No explicit width by default. Rely on combining `Grid-cell` with a dimension
+ * utility or a component class that extends 'grid'.
+ *
+ * 1. Fundamentals of the non-float grid layout.
+ * 2. Reset font size change made in `Grid`.
+ * 3. Keeps content correctly aligned with the grid direction.
+ * 4. Controls vertical positioning of units.
+ * 5. Make cells full-width by default.
+ */
+
+.Grid-cell {
+  box-sizing: border-box;
+  display: inline-block; /* 1 */
+  font-size: $defaultFontSize;
+  font-size: 1rem; /* 2 */
+  margin: 0;
+  padding: 0;
+  text-align: left; /* 3 */
+  vertical-align: top; /* 4 */
+  width: 100%; /* 5 */
+}
+
+/**
+ * Modifier: horizontally center one unit
+ * Set a specific unit to be horizontally centered. Doesn't affect
+ * any other units. Can still contain a child `Grid` object.
+ */
+
+.Grid-cell--center {
+  display: block;
+  margin: 0 auto;
+}
+

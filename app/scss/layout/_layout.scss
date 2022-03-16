@@ -1,0 +1,37 @@
+/** Layout
+
+Flexbox, <section.Section>, <main.Main>, <footer.Footer> classes
+*/
+
+.Flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.Flex--full {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.Flex-main {
+  flex: 1 0 auto;
+}
+
+.Flex-footer {
+  background-color: $navy-dark;
+  flex: 1 0 auto;
+  color: $gray;
+}
+
+.Section {
+  @media (min-width: $breakpoint-md){
+    padding-top: $defaultWhitespace;
+    padding-bottom: $whitespace-md;
+  }
+
+  @media (min-width: $breakpoint-sm){
+    padding-top: $whitespace-sm;
+    padding-bottom: $whitespace-sm;
+  }
+}

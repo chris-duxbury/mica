@@ -1,0 +1,103 @@
+/** Variables
+
+Site-wide variables including fonts, colors, spacing, etc.
+*/
+
+/* Colors
+ * ========================================================================= */
+$navy-dark: #092234;
+$navy: #163144;
+$navy-light: #00407B;
+
+$teal-dark: #1E5C88;
+$teal: #007794;
+
+$red: #B47A79;
+$yellow: #D9D963;
+
+$green-dark: #179c46;
+$green: #1aaf4f;
+$green-light: #2dc261;
+
+$black: #000;
+$gray-dark: #b5b5b5;
+$gray-med: #B0B0B0;
+$gray: #ccc;
+$gray-med-light: #EEE;
+$gray-light: #f4f4f4;
+$white: #fff;
+
+// Default colors
+$defaultTextColor: #333;
+$defaultBorderColor: $gray;
+
+// Link colors
+$linkColor: $navy-light;
+$linkDisabled: $gray-dark;
+$hoverColor: $navy;
+
+// Button colors
+$buttonTextColor: $white;
+$buttonBorderColor: transparent;
+
+// Notification colors
+$notificationAlert: $red;
+$notificationWarning: $yellow;
+$notificationSuccess: $green;
+$notificationNotice: $navy;
+
+// Table colors
+$tableHeaderBackground: $gray-dark;
+
+/* Fonts
+ * ========================================================================= */
+$georgia: unquote('Georgia, Cambria, "Times New Roman", Times, serif');
+$helvetica: unquote('"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif');
+$monospace: unquote('"Anonymous Pro", Consolas, Courier, monospace');
+$verdana: unquote('Verdana, Geneva, sans-serif');
+$gotham: unquote('"Gotham A", "Gotham B", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif');
+
+$headlineFont: $gotham;
+$sansSerifFont: $gotham;
+$serifFont: $georgia;
+$codeFont: $monospace;
+
+$defaultFontSize: 16px;
+$fontSize-sm: 14px;
+$headerFontSize: 30px;
+$subheaderFontSize: 22px;
+
+$lightFontWeight: 100;
+$defaultFontWeight: 400;
+$medFontWeight: 500;
+$boldFontWeight: 600;
+
+/* Spacing, Layout
+ * ========================================================================= */
+$defaultWhitespace: 1.5em;
+$whitespace-md: 2em;
+$whitespace-sm: 0.75em;
+$defaultLeading: 1.5;
+$tablepadding: 5px;
+
+/* Breakpoints
+ * ========================================================================= */
+$breakpoint-sm: 320px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+/* Grid
+ * ========================================================================= */
+$containerMaxWidth: 1024px;
+
+$gridFontSize: 1rem;
+$gridGutterSize: 12px;
+$gridGutterSize-md: $defaultWhitespace;
+$defaultGutterSize: $defaultWhitespace;
+
+/* Form Elements and Buttons
+ * ========================================================================= */
+$buttonBorderWidth: 0;
+$buttonPadding: 0.75em 1.5em;
+$buttonPadding-sm: 0.75em;
+$buttonDisabledOpacity: 0.6;

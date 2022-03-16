@@ -1,0 +1,59 @@
+/*
+Mixins
+*/
+
+/* Octicons
+ * ========================================================================= */
+
+@mixin octicon() {
+  font: normal normal normal 16px/1 octicons;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin octicon-check() {
+  @include octicon();
+  content: "\f03a";
+}
+
+@mixin octicon-triangle-down() {
+  @include octicon();
+  content: "\f05b";
+}
+
+@mixin octicon-triangle-up() {
+  @include octicon();
+  content: "\f0aa";
+}
+
+/* Utilities as mixins
+ * ========================================================================= */
+
+@mixin srOnly() {
+  position: absolute !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+}
+
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}

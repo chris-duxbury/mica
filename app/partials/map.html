@@ -1,0 +1,285 @@
+<!-- Encapsulate the page in single div for Safari compatibility -->
+<div>
+<section class="Section u-bgLight u-noPadding">
+  <div class="u-bgWhite">
+    <div class="Container">
+      <div class="Grid">
+        <div class="Grid-cell u-textCenter u-padding">
+          <h1 class="u-noMargin">Download KMZ</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="Container" id="downloadKML">
+    <div class="Grid u-paddedRow">
+      <p class="Grid-cell u-sizeFull u-textCenter">
+        <a class="headingB" href="/captures.kmz">captures.kmz</a><br />Click the link above to download a KMZ file
+        containing the locations of all captures currently on the storage media
+      </p>
+      <p><em>Note: if you need a KML file, you can change the extention from ".kmz" to ".zip" and extract
+        the captures.kml file from inside.</em>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div ng-include="'partials/flightcalculator.html'">
+</div>
+
+<section class="Section u-bgLight u-noPadding" ng-controller="MapCtrl">
+  <div class="u-bgWhite">
+    <div class="Container">
+      <div class="Grid">
+        <div class="Grid-cell u-textCenter u-padding">
+          <h1 class="u-noMargin">Coverage Estimator</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="Container" id="coverageEstimator">
+    <div class="Grid u-paddedRow">
+      <p class="Grid-cell u-sizeFull u-textCenter">
+        Estimate the coverage area of selected flights.
+      </p>
+    </div>
+
+    <div id="chooseFlight-Panel">
+    <!-- Choose flight panel -->
+      <div class="Container  u-bgDark">
+        <div class="Grid">
+          <div class="Grid-cell u-textCenter u-padding">
+            <button class="Button--fakeLink" type="button" id="chooseFlight-Button"
+                    ng-click="expandFn.chooseFlight()">
+              <h2 class="Caret">Choose Flight(s)</h2>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Choose flight content -->
+      <div class="Container u-bgWhite Caret-content" id="chooseFlight">
+       <div class="Grid Grid--alignMiddle">
+          <div class="Grid-cell u-sizeFull u-md-before1of4">
+            Select one or more flights:
+          </div>
+        </div>
+
+        <div class="Grid Grid--alignMiddle Grid--withGutter Input u-paddedRow">
+          <div class="Grid-cell u-md-before1of4 u-sizeFill u-textCenter margin-bottom-hairline" ng-repeat="folder in folder_list">
+            <label class="Option">
+              <input type="checkbox" class="Option-checkbox" ng-model="folder.isChecked" ng-disabled="is_rendering">
+              <span class="Option-content">
+              {{ folder.setname }}: {{folder.numOfCaptures}} captures
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="Grid Grid--warning Grid--alignMiddle" ng-class="{'u-hidden': !error_panel.no_available_flight}">
+          <div class="Grid-cell u-sizeFull u-textCenter">
+            <strong>No flight is found!</strong>
+          </div>
+        </div>
+
+        <div class="Grid Grid--withGutter Grid--alignMiddle u-paddedRow" style="overflow: hidden"
+             ng-class="{'u-hidden': error_panel.no_available_flight}">
+          <div class="Grid-cell u-sm-sizeFit u-md-before1of4 u-md-sizeFit">
+            <button type="button" class="Button Button--primary u-textNoWrap" ng-click="loadSelectedFolder()" ng-disabled="is_rendering">
+              Next
+            </button>
+          </div>
+          <div id="smallSpinner" class="Grid-cell u-size1of4 u-textLeft u-padding" style="position:relative;">
+            <div us-spinner="{radius: 5, width: 5, length: 10, color:gray}"></div>
+          </div>
+        </div>
+
+        <div class="Grid Grid--alignMiddle" ng-class="{'u-hidden': !error_panel.no_selected_flight}">
+          <div class="Grid--warning Grid-cell u-sizeFull u-textCenter">
+            <strong> Please select at least one flight to draw!</strong>
+          </div>
+        </div>
+
+        <div class="Grid Grid--alignMiddle" ng-class="{'u-hidden': !error_panel.no_valid_captures}">
+          <div class="Grid--warning Grid-cell u-sizeFull u-textCenter">
+            <strong>The selected flight(s) do not have any capture with valid GPS</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+      <!-- End of choose flight panel -->
+
+
+    <div id="flightMode-Panel">
+      <!-- Flight mode bannner -->
+      <div class="Container  u-bgDark">
+        <div class="Grid">
+          <div class="Grid-cell u-textCenter u-padding">
+            <button class="Button--fakeLink" type="button" id="flightMode-Button"
+                    ng-click="expandFn.flightMode()">
+              <h2 class="Caret" ng-class="{'is-active': expanded.flightMode}">Flight Adjustment</h2>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flight mode content -->
+      <div class="Container Section u-bgWhite Caret-content" id="flightMode">
+
+        <h3 class="u-noMargin">Selected Flight</h3>
+
+        <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+          <div class="Grid-cell u-sizFull u-textCenter">
+            {{selected_flightName.toString()}}
+          </div>
+        </label>
+
+        <h3 class="u-noMargin">Flight Data</h3>
+
+        <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+          <div class="Grid-cell u-size1of2 u-textRight">
+            Estimated AGL:
+          </div>
+          <div class="Grid-cell u-size1of3 u-textCenter">
+            {{estimated_AGL | number:2}} meters
+          </div>
+        </label>
+
+        <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+          <div class="Grid-cell u-size1of2 u-textRight">
+            Horizontal GSD:
+          </div>
+          <div class="Grid-cell u-size1of3 u-textCenter">
+            {{estimated_flight_GSD * 100 | number:2}} cm / pixel
+          </div>
+        </label>
+
+        <h2 class="headingC u-noMargin">Setting</h2>
+
+        <form name="coverageForm">
+
+          <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid-cell u-size1of2 u-textRight">
+              Camera Orientation:
+            </div>
+            <div class="Grid-cell u-md-size1of3 u-sm-size1of2">
+              <div class="Dropdown">
+                <select class="Dropdown-select" ng-model="orientation"
+                   ng-disabled="is_rendering">
+                  <option value="0">Landscape</option>
+                  <option value="90">Potrait</option>
+                </select>
+              </div>
+            </div>
+          </label>
+
+
+          <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+            <div class="Grid-cell u-size1of2 u-textRight">
+              Flight AGL:
+            </div>
+            <div class="Grid-cell u-size1of4">
+              <input type="number" class="Input-control" name="agl_value" ng-model="agl_value" min="0.01" step="0.01"
+                     ng-disabled="agl-auto || is_rendering" required />
+            </div>
+            <div class="Grid-cell u-size1of12">meters</div>
+          </label>
+
+          <div class="Grid Grid--alignMiddle" ng-show="agl_value < 10">
+            <p class="Grid-cell u-sizeFit u-before1of2 Grid--warning">
+              The flight AGL is less than 10 meters!
+            </p>
+            <p class="Grid-cell u-sizeFit u-before1of2 Grid--warning">
+              Please make sure the correct value is entered before continuing!
+            </p>
+          </div>
+
+          <label class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow">
+              <div class="Grid-cell u-size1of2 u-textRight">
+                Estimate Resolution:
+              </div>
+              <div class="Grid-cell u-md-size1of3 u-sm-size1of2">
+                <div class="Dropdown">
+                  <select class="Dropdown-select" ng-model="resolution"
+                     ng-disabled="is_rendering">
+                    <option value="low">Low (faster)</option>
+                    <option value="high">High (slower)</option>
+                  </select>
+                </div>
+              </div>
+            </label>
+
+          <div class="Grid Grid--withGutter Grid--alignMiddle u-paddedRow" ng-hide="coverageForm.agl_value.$error.min || coverageForm.agl_value.$error.required" style="overflow: hidden">
+            <div class="Grid-cell u-md-size3of5 u-md-before2of5 u-sm-size2of3 u-sm-before1of3">
+              <button type="button" class="Button Button--primary u-textNoWrap" ng-click="render()">
+                <img src="/icons/capture.png" class="icon" alt=""> Draw Coverage
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+      <!-- End of flight mode panel -->
+
+
+    <div id="coverageDisplay-Panel">
+      <!-- Coverage Display banner -->
+      <div class="Container  u-bgDark">
+        <div class="Grid">
+          <div class="Grid-cell u-textCenter u-padding">
+            <button class="Button--fakeLink" type="button" id="coverageDisplay-Button"
+                    ng-click="expandFn.coverageDisplay()">
+              <h2 class="Caret" ng-class="{'is-active':expanded.coverageDisplay}">Coverage Display</h2>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coverage display content -->
+      <div class="Container u-bgWhite Caret-content" id="coverageDisplay">
+
+        <div class="Grid Grid--error Grid--alignMiddle" ng-class="{'u-hidden': !error_panel.coverage_error}">
+          <div class="Grid-cell u-sizeFull u-textCenter">
+            <strong>{{error_message}}</strong>
+          </div>
+        </div>
+
+        <div class="Grid" id="progress_bar">
+          <div class="Grid-cell Status u-sizeFull u-textCenter u-bgLight">
+            <div class="Status-bar--green" style="width: {{part_progress}}%"><strong>{{part_progress}}%</strong></div>
+          </div>
+          <div class="Grid-cell u-sizeFull u-textCenter">
+            {{progress_message}}
+          </div>
+        </div>
+
+        <div class="Grid" id="render_spinner">
+          <div class="Grid-cell u-sizeFull u-textCenter u-padding" style="position:relative; min-height:300px;">
+            <div us-spinner></div>
+          </div>
+        </div>
+
+        <div class="Grid" id="canvas">
+          <div class="Grid-cell u-sizeFull u-textCenter u-marginTop">
+            <span>Estimated coverage for set(s) {{selected_flightName.toString()}}, given an AGL of {{agl_value | number:2}} meters
+            (Rendered at {{estimated_map_GSD * 100 | number:2}} cm/pixel)</span>
+          </div>
+          <div class="Grid-cell u-sizeFull u-textCenter u-marginBottom" style="position:relative; min-height:300px;">
+            <div id="image_area" class="Map-pixelated">
+               <div id="map_legend">
+                  <span class="Map-legend Map-excellent u-colorWhite">Excellent</span>
+                  <span class="Map-legend Map-good">Good</span>
+                  <span class="Map-legend Map-poor">Poor</span>
+                  <span class="Map-legend Map-bad u-colorWhite">Bad</span>
+               </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+<!-- End of display coverage panel -->
+</section>
+</div>

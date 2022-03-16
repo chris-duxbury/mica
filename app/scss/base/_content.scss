@@ -1,0 +1,55 @@
+/** Content
+
+Universal text and content styles reside here.
+*/
+
+
+/* Headings
+ * ========================================================================= */
+
+ %heading {
+   font-family: $headlineFont;
+   font-weight: $boldFontWeight;
+   line-height: 1.2;
+ }
+
+.headingA, h1 {
+  @extend %heading;
+
+  font-size: $headerFontSize;
+  font-weight: $lightFontWeight;
+}
+
+.headingB, h2 {
+  @extend %heading;
+
+  color: $teal;
+  font-size: $subheaderFontSize;
+  font-weight: $lightFontWeight;
+}
+
+.headingC, h3 {
+  @extend %heading;
+
+  color: $teal;
+  font-size: $subheaderFontSize;
+  font-weight: $defaultFontWeight;
+}
+
+.headingD, h4 {
+  @extend %heading;
+
+  font-size: 18px;
+  font-weight: $defaultFontWeight;
+}
+
+/* Tables
+ * ========================================================================= */
+
+#networkTable, #pinModeTable{
+  width: 100%;
+
+  &.th {
+    background-color: $tableHeaderBackground;
+  }
+}

@@ -1,0 +1,294 @@
+/** Utilities
+ */
+
+/* Vertical Align utilities
+ * ========================================================================== */
+.u-alignBaseline {
+  vertical-align: baseline !important;
+}
+
+.u-alignBottom {
+  vertical-align: bottom !important;
+}
+
+.u-alignMiddle {
+  vertical-align: middle !important;
+}
+
+.u-alignTop {
+  vertical-align: top !important;
+}
+
+/* Display utilities adapted from suitcss/utils-display
+ * ========================================================================== */
+.u-block {
+  display: block !important;
+}
+
+.u-hidden {
+  display: none !important;
+}
+
+// Completely remove from the flow but leave available to screen readers.
+.u-srOnly {
+  position: absolute !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+}
+
+.u-inline {
+  display: inline !important;
+}
+
+/**
+ * 1. Fix for Firefox bug: an image styled `max-width:100%` within an
+ * inline-block will display at its default size, and not limit its width to
+ * 100% of an ancestral container.
+ */
+.u-inlineBlock {
+  display: inline-block !important;
+  max-width: 100%; /* 1 */
+}
+
+.u-table {
+  display: table !important;
+}
+
+.u-tableCell {
+  display: table-cell !important;
+}
+
+.u-tableRow {
+  display: table-row !important;
+}
+
+/* Text utilities adapted from suitcss/utils-text
+ * ========================================================================== */
+.u-textBreak {
+  word-wrap: break-word !important;
+}
+
+.u-textCenter {
+  text-align: center !important;
+}
+
+.u-textLeft {
+  text-align: left !important;
+}
+
+.u-textRight {
+  text-align: right !important;
+}
+
+.u-textNoWrap {
+  white-space: nowrap !important;
+}
+
+.u-textTruncate {
+  max-width: 100%;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+}
+
+.u-textLight {
+  font-weight: $lightFontWeight;
+}
+
+.u-textBold {
+  font-weight: $boldFontWeight;
+}
+
+
+/* Float utilities
+ * ========================================================================== */
+.u-floatLeft {
+  float: left !important;
+}
+
+.u-floatRight {
+  float: right !important;
+}
+
+.u-clearfix:before,
+.u-clearfix:after {
+  content: " ";
+  display: table;
+}
+
+.u-clearfix:after {
+  clear: both;
+}
+
+/* Position utilities adapted from suitcss/utils-position
+ * ========================================================================== */
+.u-posAbsolute {
+  position: absolute !important;
+}
+
+.u-posAbsoluteCenter {
+  bottom: 0 !important;
+  left: 0 !important;
+  margin: auto !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+}
+
+.u-posFixed {
+  position: fixed !important;
+  backface-visibility: hidden; //Make sure fixed elements are promoted into a new layer, for performance reasons.
+}
+
+.u-posRelative {
+  position: relative !important;
+}
+
+.u-posStatic {
+  position: static !important;
+}
+
+/* Margin and Padding Utilities
+ * ========================================================================== */
+.u-noMargin {
+  margin: 0 !important;
+}
+
+.u-noPadding {
+  padding: 0 !important;
+}
+
+.u-marginTop {
+  margin-top: $defaultWhitespace !important;
+}
+
+.u-marginBottom {
+  margin-bottom: $defaultWhitespace !important;
+}
+
+.u-padding {
+  padding-top: $defaultWhitespace !important;
+  padding-bottom: $defaultWhitespace !important;
+}
+
+.u-paddingTop {
+  padding-top: $defaultWhitespace !important;
+  padding-bottom: $defaultWhitespace !important;
+}
+
+.u-paddingBottom {
+  padding-top: $defaultWhitespace !important;
+  padding-bottom: $defaultWhitespace !important;
+}
+
+.margin-bottom-hairline {
+  margin-bottom: 2px;
+}
+
+// Responsive Margin & Padding Utilities
+
+@media (min-width: $breakpoint-sm) {
+  .u-sm-noMargin {
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .u-md-noMargin {
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .u-lg-noMargin {
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: $breakpoint-sm) {
+  .u-sm-noPadding {
+    padding: 0 !important;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .u-md-noPadding {
+    padding: 0 !important;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .u-lg-noPadding {
+    padding: 0 !important;
+  }
+}
+
+.u-paddedRow {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+@media (min-width: $breakpoint-md) {
+  .u-paddedRow {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .u-sm-paddedRow {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+}
+
+/* Display Utilities
+ * ========================================================================== */
+.u-hideOverflow {
+  overflow: hidden;
+}
+
+/* Color Theme Utilities
+ * ========================================================================== */
+.u-bgLight {
+  background-color: $gray-light;
+}
+
+.u-bgWhite {
+  background-color: $white;
+}
+
+.u-bgDark {
+  background-color: $gray;
+}
+
+.u-bgGreen {
+  background-color: $green;
+}
+
+.u-colorTeal {
+  color: $teal;
+}
+
+.u-colorWhite {
+  color: $white;
+}
+
+.u-colorGreen {
+  color: $green;
+}
+
+.u-colorRed {
+  color: $red;
+}
+
+/* Font weight
+ * ========================================================================= */
+.u-fontBold {
+  font-weight: bold;
+}

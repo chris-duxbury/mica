@@ -1,0 +1,20 @@
+{
+  "name": "ms5-control",
+  "description": "Web control interface for MS5 camera",
+  "repository": "",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-compass": "^1.0.3",
+    "karma": "~0.10",
+    "karma-jasmine": "~0.1",
+    "karma-junit-reporter": "~0.1",
+    "phantomjs": "~1.9",
+    "protractor": "~0.17.0"
+  },
+  "dependencies": {
+    "imagemin-gifsicle": "^4.1.0",
+    "imagemin-jpegtran": "^4.1.0",
+    "imagemin-optipng": "^4.2.0",
+    "imagemin-pngquant": "^4.0.0"
+  }
+}

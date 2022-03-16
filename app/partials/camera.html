@@ -1,0 +1,98 @@
+<section class="Section Container" ng-controller="StatusCtrl">
+  <div class="Grid-cell u-size4of4 Status-bar" ng-class="{'Status-bar--yellow': status.sd_warn}" ng-hide="((!status.sd_warn) || (status.sd_status == 'NotPresent') || (status.sd_gb_total == 0))">
+  {{status.sd_gb_free | number : 1}} of {{status.sd_gb_total | number : 1}} GB Free
+  </div>
+  <div class="Grid-cell u-size4of4 Status-bar Status-bar--red" ng-hide="!((status.sd_status == 'NotPresent') || (status.sd_gb_total == 0))">No storage media
+  </div>
+</section>
+
+<section class="Section u-bgLight Flex-main" ng-hide="config['enable_man_exposure'] == false">
+  <form class="Container">
+    <div class="Grid Grid--alignMiddle Grid--withGutter u-paddedRow" ng-repeat='exp_setting in exp_settings' ng-class="{'Form--hasWarning': exp_settings.pending}">
+      <div class="Grid-cell u-lg-size4of12 u-textCenter u-sm-noPadding u-sm-size4of12">
+        <label class="u-colorTeal" for="exposure{{exp_setting.band_number}}">Exposure {{exp_setting.band_number}}</label>
+      </div>
+      <div class="Grid-cell u-size5of12">
+        <div class="Dropdown ">
+          <select class="Dropdown-select" id="exposure{{exp_setting.band_number}}" name="{{exp_setting.field_name}}"
+                  ng-model="exp_setting.value" ng-change="exp_setting.update()">
+            <option ng-repeat="exp in exp_options" value="{{exp}}" ng-selected="exp == exp_setting.value">{{exp/1000}} ms</option>
+          </select>
+        </div>
+      </div>
+      <div class="Grid-cell u-lg-size3of12 u-sm-size3of12">
+        <div class="Dropdown ">
+          <select class="Dropdown-select" ng-model="exp_setting.gain" ng-change="exp_setting.update()"
+                  name="gain{{exp_setting.band_number}}" id="gain{{exp_setting.band_number}}">
+            <option ng-repeat="g in exp_gain_options" value="{{g}}" ng-selected="g == exp_setting.gain">{{g}}x</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+<section class="Section u-bgLight Flex-main">
+  <form class="Container">
+    <div class="Grid Grid--withGutter Grid--alignMiddle u-paddedRow">
+
+      <div class="Grid-cell u-md-size5of12 u-md-before4of12 u-sm-size1of2">
+        <div class="Dropdown">
+          <select class="Dropdown-select" id="viewType" ng-model="config['preview_band']" ng-change="setViewType(config['preview_band'])"
+                  ng-class="{'Form--hasWarning' : viewTypePending == true}">
+            <option value="multi">All Bands</option>
+            <option ng-repeat="camera in camera_info" value="band{{$index+1}}">Band {{$index+1}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="Grid-cell u-md-size3of12 u-sm-size1of2">
+        <label class="Option" ng-show="config.streaming_allowed">
+          <input type="checkbox" class="Option-checkbox" ng-change="setStreaming()" ng-model="config.streaming_enable" id="streaming_enable" value="1" />
+          <span class="Option-content">
+            Streaming
+          </span>
+        </label>
+        <span ng-hide="config.streaming_allowed">
+          &#9940; Streaming (disabled)
+        </span>
+      </div>
+
+    </div>
+
+    <div class="Grid Grid--withGutter Grid--alignMiddle u-paddedRow">
+
+      <div class="Grid-cell u-md-size3of12 u-md-before4of12 u-sm-size1of2">
+        <button type="button" class="Button Button--primary u-textNoWrap" ng-click="command_image_capture()">
+          <img src="/icons/capture.png" class="icon" alt=""> Capture
+        </button>
+      </div>
+      <div class="Grid-cell u-md-size3of12 u-sm-size1of2">
+        <button type="button" class="Button Button--primary u-textNoWrap" ng-click="detect_panel_clicked()" ng-disabled="!config.streaming_allowed">
+          <span ng-if="!detect_panel_running && config.streaming_allowed">&#x1F50E; QR</span>
+          <span ng-if="!detect_panel_running && !config.streaming_allowed">&#9940; QR (disabled)</span>
+          <span ng-if=" detect_panel_running"><span class="octicon octicon-primitive-square u-alignMiddle"></span> Stop</span>
+        </button>
+        <audio ng-src="{{ (detect_panel_running && config.audio_enable) ? '/snd/88_E.mp3' : '/' }}" type="audio/mpeg" loop="loop" autoplay="autoplay" ></audio>
+      </div>
+    </div>
+  </form>
+</section>
+
+<section class="Map Flex-main">
+  <div class="Grid">
+    <div class="Grid-cell u-textCenter" id="live_view_img">
+        <img ng-src="{{ live_image.jpeg_url }}"/>
+    </div>
+  </div>
+</section>
+
+<footer class="Flex-footer">
+  <div class="Container u-paddedRow">
+    <div class="Grid">
+      <div class="Grid-cell">
+        <span>Refresh count: {{a}}</span>
+      </div>
+    </div>
+  </div>
+</footer>

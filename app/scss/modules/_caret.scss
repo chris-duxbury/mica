@@ -1,0 +1,72 @@
+/* Caret
+
+Show a nice little triangular arrow after text
+*/
+
+.Caret {
+  margin: 0;
+  position: relative;
+
+  color: $teal-dark;
+
+  &:after {
+    @include octicon-triangle-down();
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    width: 2em;
+    height: 1em;
+    margin-top: 0.25em;
+    margin-bottom: 0;
+
+    font-size: 16px;
+    text-align: center;
+    transition: 0.2s ease-out transform;
+    transform: none;
+  }
+
+  &.is-active {
+    &:after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.Caret-content {
+  /* For accessibility, .is-collapsed should have `display: none`
+     but it will mean the `transition` animation will be lost.
+
+     On click to open, the JS plugin will need to:
+      1. remove .is-collapsed
+      2. add .transitioning and `height: auto`
+      3. wait for the transition to finish
+      4. remove .transitioning
+      5. finally, add .is-expanded.
+
+    On click to close, the JS plugin will need to:
+      1. remove .is-expanded
+      2. add .transitioning and `height: 0`
+      3. wait for the transition to finish
+      4. remove .transitioning
+      5. finally, add .is-collapsed
+   */
+  &.is-collapsed {
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.5s ease-out max-height;
+  }
+
+  &.is-expanded {
+    max-height: 3600px;
+    overflow: hidden;
+    transition: 0.5s ease-out max-height;
+  }
+
+  &.transitioning {
+    display: block;
+    overflow: hidden;
+    transition: 0.3s ease-out height;
+  }
+}

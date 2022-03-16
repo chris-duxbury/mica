@@ -1,0 +1,108 @@
+@mixin coloredForm($color) {
+    color: $color;
+
+    & input {
+        color: $color;
+        border-color: $color;
+    }
+
+    & .Dropdown-select {
+        color: $color;
+        border-color: $color;
+    }
+
+    & .Dropdown:after {
+        color: $color;
+    }
+}
+
+@mixin transition($time) {
+    -webkit-transition: color $time, border-color $time; /* Safari */
+    transition: color $time, border-color $time;
+}
+
+#FlightCalculatorApp {
+    input {
+        padding: 5px !important;
+        text-align: center;
+        font-size: 16px;
+
+        &:focus {
+            outline: solid 1px green;
+        }
+    }
+
+    .Dropdown-select {
+        font-weight: 100;
+
+        &:focus {
+            outline: solid 1px green;
+        }
+    }
+
+    .Button:disabled {
+        background-color: #f4f4f4;
+    }
+
+    .Error-message {
+        text-align: center;
+        font-style: italic;
+    }
+
+    .Form-error {
+        color: red !important;
+
+        input {
+            color: red !important;
+            border-color: red !important;
+            border-left: 1px solid;
+            border-right: 1px solid;
+            border-top: 1px solid;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+                  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+
+            &:focus {
+                outline: 2px solid red !important;
+            }
+        }
+
+        .Dropdown-select {
+            color: red !important;
+            border-color: red !important;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+                  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+
+            &:focus {
+                outline: 2px solid red !important;
+            }
+        }
+
+        .Dropdown:after {
+            color: red !important;
+        }
+    }
+
+    .Implicit-output {
+        @include coloredForm(turquoise);
+    }
+
+    .Implicit-output, #missionOutput-Panel .Section {
+        @include transition(0.5s);
+
+        & input {
+            @include transition(0.5s);
+        }
+
+        & .Dropdown-select {
+            @include transition(0.5s);
+        }
+
+        & .Dropdown:after {
+            @include transition(0.5s);
+        }
+    }
+
+    .Flash-form {
+        @include coloredForm(papayawhip);
+    }
+}

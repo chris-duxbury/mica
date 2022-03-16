@@ -1,0 +1,89 @@
+/*
+Horizontal Bar Graph
+*/
+
+.Status {
+  margin-top: 6px;
+}
+
+.Status-label {
+  padding: 10px 12px 10px 0;
+
+  text-align: right;
+  font-weight: $lightFontWeight;
+}
+
+.Status-bar {
+  padding: 10px 12px;
+  background-color: $gray-med-light;
+  color: $black;
+  font-weight: $medFontWeight;
+  text-shadow: 0 0 .5em $white;
+}
+
+.Status-bar--green {
+  background-color: $green;
+  color: $white;
+  text-shadow: 0 0 .5em $defaultTextColor;
+}
+
+.Status-bar--yellow {
+  background-color: $yellow;
+  color: $black;
+  text-shadow: 0 0 .5em $white;
+}
+
+.Status-bar--red {
+  background-color: $red;
+  color: $white;
+  text-shadow: 0 0 .5em $defaultTextColor;
+}
+
+/* Vertical Bar Graph
+*/
+
+.Graph {
+  margin-top: $whitespace-md;
+
+  color: $white;
+  font-weight: $boldFontWeight;
+}
+
+.Graph-bar {
+  position: relative;
+  vertical-align: bottom !important;
+  border-right: 2px solid $white;
+
+  background-color: $gray-dark;
+  text-align: center;
+}
+
+.Graph-bar--error {
+  background-color: $red;
+}
+
+.Graph-bar--warning {
+  color: $black;
+  text-shadow: 0 0 .5em $white;
+  background-color: $yellow;
+}
+
+.Graph-bar--good {
+  background-color: $green;
+}
+
+.Graph-bar--used {
+  //color: $teal;//Decided against including this change for now
+}
+
+.Graph-label {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  padding: 0.25em 0.1em;
+
+  background-color: $navy-dark;
+  font-size: 12px;
+}

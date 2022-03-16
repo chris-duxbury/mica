@@ -1,0 +1,78 @@
+/*
+Base
+
+For styling elements directly
+*/
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  color: $defaultTextColor;
+  font-family: $sansSerifFont;
+  font-size: $defaultFontSize;
+  line-height: $defaultLeading;
+  margin: 0;
+}
+
+a {
+  color: $linkColor;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $hoverColor;
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1em 0 0;
+}
+
+p, ul, ol, dl, pre, table, fieldset, blockquote {
+  margin: $defaultWhitespace 0 0;
+}
+
+/* <form> elements
+ * ========================================================================= */
+
+input,
+textarea {
+  border: 1px solid $defaultBorderColor;
+  border-radius: 3px;
+  padding: 0.4em 0.75em;
+}
+
+/* <table> elements
+ * ========================================================================= */
+
+table {
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+  max-width: 100%;
+}
+
+td, th {
+  padding: 5px;
+}
+
+th {
+  text-align: left;
+  background-color: $gray;
+}
+
+/* Responsive media
+ * ========================================================================= */
+img,
+object,
+embed {
+  max-width: 100%;
+}
